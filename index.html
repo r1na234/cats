@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel = "stylesheet" href = "index.css"/>
+    <script src="https://kit.fontawesome.com/56be47d466.js" crossorigin="anonymous"></script>
+    <title>Meow</title>
+    <link rel="icon" type="png" sizes="32x32" href="img/cats.png">
+    <script defer src="api.js "></script>
+    <script defer src ="index.js"></script>  
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class = "text-center mb-1">Choose your cat</h1>
+        <h1 class = "text-center mb-2">or</h1>
+        <div class = "btn_wr d-flex justify-content-center">
+        <div class ="border_radius_for_btn mb-2">
+            <button type ="button" data-add_new_cat class="new mb-3">Add a new one</button>
+        </div>
+        </div>
+        <div data-modal class="modal-wrapper hidden_create">
+            <div class="modal-panel">
+                <form class ="forma" name="add_cats_form">
+                    <div class="form-floating mb-3">
+                        <input name="id" type="number" class="form-control" id="floatingID" placeholder="ID">
+                        <label for="floatingID">ID</label>
+                    </div>
+                    <div class="form-floating">
+                        <input name="image" type="string" class="form-control" id="floatinLink" placeholder="Link">
+                        <label for="floatingLink">Link to the image of your cat</label>
+                    </div>
+                    <div class="form-floating">
+                        <input name="name" type="string" class="form-control" id="floatName" placeholder="Name">
+                        <label for="floatingName">Your cat`s name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="rate" type="number" class="form-control" id="floatingRate" placeholder="Rate" min ='0' max ='10'>
+                        <label for="floatingRate">Rate</label>
+                    </div>
+                    <div class="form-floating">
+                        <input name="description" type="string" class="form-control" id="floatDescription" placeholder="Description">
+                        <label for="floatDescription">Describe your cat</label>
+                    </div>
+                    <div class="mb-3 form-check"> 
+                        <label>
+                            <input name="favourite" class="checkbox addfav" type="checkbox" />
+                            Is it your favourite cat? <span class="fake-checkbox"></span>
+                        </label>                
+                    </div>
+                    <p class="error-msg" data-ermsg></p>
+                    <div class="btn-wrapper-modl">
+                    <button type="submit" class="btn btn-outline-dark sbmt">Submit</button>
+                    <button type="button" class="close-modal btn btn-outline-dark cls">Close</button>
+                    </div>  
+                </form>
+            </div>
+        </div>
+        <div data-modal-open class="open_modal_wrapper hidden_open">
+                <div class="modal_open_panel">
+                    <div  class="card mb-2 card_close" style="width: 18,5rem">   
+                        <div class="cat_image"> 
+                        </div>
+                            <div class="card-body">
+                              <h5 data-open-tittle class="card-title-open"></h5>
+                              <p data-open-id class="card-text-open"></p> 
+                              <p data-open-age class="card-text-open"></p>
+                              <p data-open-rate class="card-text-open"></p>
+                              <p data-open-description class="card-text-open"></p>      
+                              <p data-open-favourite class='card-text-open'></p>
+                              <div class="mb-3 form-check openCh"> 
+                                <label>
+                                    <input name="favourite" class="checkbox openFav" type="checkbox"/>
+                                    <span class="fake-checkbox fcxO"></span>
+                                </label>      
+                            </div>     
+                              <button type="button" class="close-modal-o btn btn-outline-dark cls">Close</button> 
+                            </div>
+                            
+                          </div>
+                          
+                </div>
+        </div>
+        <div data-modal-edit class="edit_modal_wrapper hidden_edit">
+                <div class="modal_edit_panel mb-3">
+                        <form name="edit">
+                              <div class="mb-3 form-edit">
+                                <label for="ID">ID</label>
+                                <input type="number" name ="id" id="ID" class="form-control"  value="" readonly>
+                              </div>
+                          <div class="form-edit">
+                              <label for="Link">Link</label>
+                              <input name="image" type="string" class="form-control" id="Link" value ="">
+                          </div>
+                          <div class="form-edit">
+                              <label for="Name">Name</label>
+                              <input name="name" type="string" class="form-control" id="Name" value ="">
+                          </div>
+                          <div class="form-edit">
+                            <label for="Rate">Age</label>
+                            <input name="age" type="number" class="form-control" id="Rate" value ="" min ='0' max ='10'>
+                        </div>
+                          <div class="form-edit">
+                              <label for="Rate">Rate</label>
+                              <input name="rate" type="number" class="form-control" id="Rate" value ="">
+                          </div>
+                          <div class="form-edit">
+                              <label for="Description">Description</label>
+                              <input name="description" type="string" class="form-control" id="Description" value ="">
+                          </div>
+                          <div class="select">
+                          </div>
+                          <div class="btn-wrapper-modl-e"> 
+                            <button type="submit" class="btn btn-outline-dark sbmt">Submit</button>        
+                        <button type="button" class="close-modal-e btn btn-outline-dark cls">Close</button>
+                          </div>
+                        </form>
+                      </div>
+                
+                </div>
+         </div>
+        </div>
+        <div data-wrapper class ='d-flex justify-content-around'></div>
+    </div>
+</body>
+</html>
