@@ -5,6 +5,7 @@ const $modalWrapper = document.querySelector("[data-modal]");
 const $closeModalButton = document.querySelector('.close-modal');
 const $forma = document.querySelector('.forma');
 const $formErrorMsg = document.querySelector('[data-ermsg]');
+const $resetAddBtn = document.querySelector('.reset-modal');
 
 //константы для Open 
 const $modalWrapperOpen = document.querySelector("[data-modal-open]");
@@ -16,8 +17,6 @@ const $modalWrapperEdit = document.querySelector("[data-modal-edit]");
 const $editModalPanel = document.querySelector('.modal_edit_panel');
 const $closeEditButton = document.querySelector('.close-modal-e');
 
-
-
 //загружаем всех котов на страницу
 const generateCatCard = (cat) =>{
     return (
@@ -25,7 +24,7 @@ const generateCatCard = (cat) =>{
         <img
           src="${cat.image}"
           class="card-img-top"
-          alt="oops, no cat photo("
+          alt="${cat.name} photo"
         />
         <div class="card-body">
           <h5 class="card-title">${cat.name}</h5>
@@ -71,13 +70,21 @@ firstGettingCats();
 //форма добавления кота
 $addButton.addEventListener('click',async (event)=>{
   $modalWrapper.classList.remove("hidden_create");
+  document.body.style.overflow = 'hidden';
   $formErrorMsg.innerHTML='';
-  localStorage.clear();
+  if(parseData) {
+    Object.keys(parseData).forEach(key =>{
+      document.forms.add_cats_form[key].value = parseData[key];
+   
+    })
+  }
 })
 
 document.forms.add_cats_form.addEventListener('submit', async (event) => {
   event.preventDefault();
   $formErrorMsg.innerHTML='';
+  localStorage.clear(); 
+  document.body.style.overflow = 'scroll';
 
   const data = Object.fromEntries(new FormData(event.target).entries());
 
@@ -103,23 +110,24 @@ document.forms.add_cats_form.addEventListener('submit', async (event) => {
     $formErrorMsg.innerText = responce.message;
     return;
   }
-
+  
 })
 
 $closeModalButton.addEventListener('click', (event)=>{
   $modalWrapper.classList.add("hidden_create");
+  localStorage.clear();
+  $forma.reset();
+  document.body.style.overflow = 'scroll';
+})
+
+$resetAddBtn.addEventListener('click', (event)=>{
+  localStorage.clear();
   $forma.reset();
 })
 
 //сохранение формы добавления в LS
 const formDataFromLC = localStorage.getItem(document.forms.add_cats_form.name);
 const parseData = formDataFromLC? JSON.parse(formDataFromLC): null;
-if(parseData) {
-  Object.keys(parseData).forEach(key =>{
-    document.forms.add_cats_form[key].value = parseData[key];
-   
-  })
-}
 
 document.forms.add_cats_form.addEventListener('input', event =>{
   const formData = Object.fromEntries(new FormData(document.forms.add_cats_form).entries());
@@ -153,6 +161,7 @@ $wrapper.addEventListener('click',async (event)=>{
         const responceOpen = await infoAboutCard.json();
       if(!infoAboutCard.ok) throw Error (responceOpen.message)
       $modalWrapperOpen.classList.remove("hidden_open");
+      document.body.style.overflow = 'hidden';
       
       let catImage = document.querySelector('.cat_image')
       catImage.innerHTML = `<img
@@ -170,7 +179,7 @@ $wrapper.addEventListener('click',async (event)=>{
         document.querySelector('.fcxO').style.background = 'url(img/checkbox_checked.png)';
       }
       else{
-        document.querySelector('.openFav').style.background = 'url(img/checkbox_empty.png)';
+       document.querySelector('.openFav').style.background = 'url(img/checkbox_empty.png)';
         document.querySelector('.fcxO').style.background = 'url(img/checkbox_empty.png)';
       }
 
@@ -187,6 +196,7 @@ $wrapper.addEventListener('click',async (event)=>{
         const responceEdit = await editInfo.json();
       if(!editInfo.ok) throw Error (responceEdit.message);
       $modalWrapperEdit.classList.remove('hidden_edit');
+      document.body.style.overflow = 'hidden';
       
       document.forms.edit.image.value = responceEdit.image;
       document.forms.edit.name.value = responceEdit.name;
@@ -195,10 +205,10 @@ $wrapper.addEventListener('click',async (event)=>{
       document.forms.edit.rate.value = Number(responceEdit.rate);
       document.forms.edit.description.value = responceEdit.description;
       if(responceEdit.favorite){
-       document.querySelector('.select').innerHTML ='<select class="form-select efv" aria-label="Default select example"> <option selected>Favorite</option>  <option>Not favorite</option> </select> '
+       document.querySelector('.select').innerHTML ='<select class="form-select efv" id ="select" aria-label="Default select example"> <option selected value ="1">Favorite</option>  <option value ="2">Not favorite</option> </select> '
       }
       else{
-        document.querySelector('.select').innerHTML = '<select class="form-select efv" aria-label="Default select example"> <option selected>Not favorite</option>  <option>Favorite</option> </select> '
+        document.querySelector('.select').innerHTML = '<select class="form-select efv"id ="select" aria-label="Default select example"> <option selected value ="2">Not favorite</option>  <option value ="1">Favorite</option> </select> '
       }
      
       } catch(error){
@@ -213,19 +223,20 @@ $wrapper.addEventListener('click',async (event)=>{
 //кнопки для закрытия и сабмита для модалок
 $closeOpenButton.addEventListener('click', (event)=>{
   $modalWrapperOpen.classList.add("hidden_open");
+  document.body.style.overflow = 'scroll';
+  
 })
 
 
 document.forms.edit.addEventListener('submit', async (event) => {
   event.preventDefault();
-  //забираем инфу из формы
   const data = Object.fromEntries(new FormData(event.target).entries());
   
   data.id = Number(data.id);
   data.age = Number(data.age);
   data.rate = Number(data.rate);
   data.favorite = data.favorite == 'on';
-  if(document.querySelector('.efv').selected = 'favorite'){
+  if(select.value =='1'){
     data.favorite = 'true';
   }
   else {
@@ -233,33 +244,32 @@ document.forms.edit.addEventListener('submit', async (event) => {
   }
 
   let editId = data.id;
-  // отправляем put запрос  
-  const res = await api.editCat(editId);
-  //data изменяется, запрос put успешен
+  const res = await api.editCat(editId, data);
   
-  /* а дальше ничего не работает, данные в модалке не меняются, пробовала по-разному, не получается(( Пробовала менять и в самих карточках, тоже не работает.
-  Подскажите пожалуйста, как это можно сделать
   document.forms.edit.image.value = data.image;
   document.forms.edit.name.value = data.name;
   document.forms.edit.age.value = data.age;
   document.forms.edit.rate.value = data.rate;
   document.forms.edit.description.value = data.description;
-  if(data.favorite){
-   document.querySelector('.select').innerHTML ='<select class="form-select efv" aria-label="Default select example"> <option selected>Favorite</option>  <option>Not favorite</option> </select> '
+  if(select.value =='1'){
+   document.querySelector('.select').innerHTML ='<select class="form-select efv" id ="select" aria-label="Default select example"> <option selected value ="1">Favorite</option>  <option value ="2">Not favorite</option> </select> '
+   data.favorite = 'true';
+   select.value="1"
   }
   else{
-    document.querySelector('.select').innerHTML = '<select class="form-select efv" aria-label="Default select example"> <option selected>Not favorite</option>  <option>Favorite</option> </select> '
+    document.querySelector('.select').innerHTML = '<select class="form-select efv" id ="select" aria-label="Default select example"> <option selected value ="2">Not favorite</option>  <option value ="1">Favorite</option> </select> '
+    data.favorite = 'false';
+    select.value="2"
   }
-
-  */
-  
+  $wrapper.replaceChildren();
+  firstGettingCats();
   
   $modalWrapperEdit.classList.add("hidden_edit");
-  
-
+  document.body.style.overflow = 'scroll';
 
 })
 
 $closeEditButton.addEventListener('click', (event)=>{
   $modalWrapperEdit.classList.add("hidden_edit");
+  document.body.style.overflow = 'scroll';
 })
