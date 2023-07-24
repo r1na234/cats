@@ -21,20 +21,20 @@ const $closeEditButton = document.querySelector('.close-modal-e');
 const generateCatCard = (cat) =>{
     return (
         `<div data-card_id=${cat.id} class="card mb-2" style="width: 16,5rem">
-        <img
-          src="${cat.image}"
-          class="card-img-top"
-          alt="${cat.name} photo"
-        />
-        <div class="card-body">
-          <h5 class="card-title">${cat.name}</h5>
-          <p class="card-text">${cat.description}</p>
-          <button type="button" data-action ="open" class="btn btn-outline-dark">Open</button>
-          <button type="button" data-action ="edit" class="btn btn-outline-dark"><i class="fa-solid fa-pencil"></i> Edit</button>
-          <button type="button" data-action ="delete" class="btn btn-outline-dark"><i class="fa-solid fa-trash"></i> Delete</button>
-
+          <img
+            src="${cat.image}"
+            class="card-img-top"
+            alt="${cat.name} photo"
+          />
+          <div class="card-body">
+            <h5 class="card-title">${cat.name}</h5>
+            <p class="card-text">${cat.description}</p>
+            <button type="button" data-action ="open" class="btn btn-outline-dark">Open</button>
+            <button type="button" data-action ="edit" class="btn btn-outline-dark"><i class="fa-solid fa-pencil"></i> Edit</button>
+            <button type="button" data-action ="delete" class="btn btn-outline-dark"><i class="fa-solid fa-trash"></i> Delete</button>
         </div>
-      </div>`
+        </div>`
+      
     )
    
 }
@@ -64,7 +64,6 @@ const firstGettingCats = async ()=> {
 }
 
 firstGettingCats();
-
 
 
 //форма добавления кота
